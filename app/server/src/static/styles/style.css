@@ -1,0 +1,8 @@
+body {
+    background-color: red;
+}
+
+#image-preview > img {
+    width: 450px;
+    height: auto;
+}

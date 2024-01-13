@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+        <link rel="stylesheet" href="static/styles/style.css" />
+
+        <title>Weather Classifier</title>
+    </head>
+    <body>
+        <h1>Weather Classifier</h1>
+
+        {% if message %}
+        <p>{{ message }}</p>
+        {% endif %}
+
+        <form
+            action="{{ url_for('upload') }}"
+            method="post"
+            enctype="multipart/form-data"
+        >
+            <label for="file">Choose an image:</label>
+            <input
+                type="file"
+                id="file"
+                name="file"
+                accept=".jpg, .jpeg, .png"
+                required
+                onchange="previewImage()"
+            />
+            <br />
+            <input type="submit" name="action" value="Predict" />
+        </form>
+
+        <div id="image-preview">
+            {% if img != None %}
+            <img
+                src="{{ url_for('uploaded_file', filename=img) }}"
+                alt="Example Image"
+            />
+            <p>{{ img }}</p>
+            {% endif %}
+        </div>
+        <script>
+            function previewImage() {
+                const fileInput = document.getElementById("file");
+                const imagePreview = document.getElementById("image-preview");
+
+                // Clear previous preview
+                imagePreview.innerHTML = "";
+
+                // Check if a file is selected
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        // Create an image element
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+
+                        // Append the image to the preview container
+                        imagePreview.appendChild(img);
+                    };
+
+                    // Read the selected file as a data URL
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+            }
+        </script>
+    </body>
+</html>
