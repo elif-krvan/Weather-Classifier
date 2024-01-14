@@ -48,28 +48,16 @@ def home(message = "", img=None):
         
 @app.route('/upload', methods=['POST'])
 def upload():
-    # img_info = session.pop('img_info', None)
-
-    # Delete the previously uploaded image from the server
-    # try:
-    #     if img_info:
-    #         print()
-    #         os.remove(img_info['file_path'])
-    # except Exception as e:
-    #     print("file not found")
     clear_img_data()
         
     uploaded_file = request.files['file']
-    
     base_name, ext = os.path.splitext(secure_filename(uploaded_file.filename))
-    
+
     if ext.lower() == '.jpg':
         new_filename = base_name + '.jpeg'
         uploaded_file.filename = secure_filename(new_filename)
-    elif not (ext.lower() == "jpg" or ext.lower() == "gif" or ext.lower() == "png" or ext.lower() == "bmp"):
+    elif not (ext.lower() == ".jpeg" or ext.lower() == ".gif" or ext.lower() == ".png" or ext.lower() == ".bmp"):
         return render_template('index.html', message="Only PNG, JPG, JPEG, BMP, and GIF files are supported")
-    
-    print(uploaded_file.filename)
     
     # temporarily save the file to the system
     filename = secure_filename(uploaded_file.filename)
@@ -95,7 +83,7 @@ def upload():
     
     session["pred_confidence"] = int((abs(yhat - 0.5) + 0.5) * 100)
     session["pred_result"] = result    
-    session["remove_img"] = False    
+    session["remove_img"] = False  
     
     return redirect(url_for('home'))
 
@@ -117,4 +105,4 @@ def clear_img_data():
     session.clear()  
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))

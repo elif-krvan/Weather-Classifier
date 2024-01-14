@@ -16,12 +16,13 @@
         <h1>Weather Classifier</h1>
 
         <div class="select-img">
+            <p id="prompt">Choose an image of a weather condition!</p>
             <form
+                id="file-upload-form"
                 action="{{ url_for('upload') }}"
                 method="post"
                 enctype="multipart/form-data"
             >
-                <p id="prompt">Choose an image of a weather condition!</p>
                 <div class="file-select-btn">
                     <label for="file-selector">Select Image</label><br />
                     <input
@@ -29,7 +30,6 @@
                         id="file-selector"
                         name="file"
                         accept=".jpg, .jpeg, .png, .gif, .bmp"
-                        required
                         onchange="previewImage()"
                         hidden="true"
                     />
@@ -45,6 +45,20 @@
                         src="{{ url_for('uploaded_file', filename=img) }}"
                         alt="Uploaded Image"
                     />
+                    {% else %}
+                    <div id="drop-area">
+                        <img id="upload-img" src="{{ url_for('static',
+                        filename="./img/upload.gif") }}" alt="Upload" />
+                        <p id="drop-msg">Drop an image</p>
+                        <input
+                            type="file"
+                            id="file-selector-dd"
+                            name="file"
+                            accept=".jpg, .jpeg, .png, .gif, .bmp"
+                            onchange="previewImage('file-selector-dd')"
+                            hidden="true"
+                        />
+                    </div>
                     {% endif %}
                 </div>
                 <input
@@ -69,33 +83,58 @@
 
             predictBtn.style.display = "none";
 
-            function previewImage() {
+            function previewImage(inputId = "file-selector") {
+                console.log(inputId);
                 predictBtn.style.display = "inline-block";
-                const fileInput = document.getElementById("file-selector");
+                const fileInput = document.getElementById(inputId);
                 const imagePreview = document.getElementById("image-preview");
+
+                let uploadFile = fileInput.files;
 
                 // clear previous view
                 imagePreview.innerHTML = "";
                 resultMsg.innerHTML = "";
 
                 // Check if a file is selected
-                if (fileInput.files && fileInput.files[0]) {
+                if (uploadFile && uploadFile[0]) {
                     const reader = new FileReader();
 
                     reader.onload = function (e) {
-                        // Create an image element
+                        // create img element
                         const img = document.createElement("img");
                         img.src = e.target.result;
-
-                        // Append the image to the preview container
                         imagePreview.appendChild(img);
                     };
 
-                    // Read the selected file as a data URL
-                    reader.readAsDataURL(fileInput.files[0]);
-                    console.log(fileInput.files[0]);
-                    chosenFile.innerHTML = fileInput.files[0].name;
+                    // read selected file
+                    reader.readAsDataURL(uploadFile[0]);
+                    chosenFile.innerHTML = uploadFile[0].name;
                 }
+            }
+
+            const dropArea = document.getElementById("image-preview");
+            const fileSelector = document.getElementById("file-selector");
+
+            dropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropArea.style.border = "2px dashed #333";
+            });
+
+            dropArea.addEventListener("dragleave", () => {
+                dropArea.style.border = "2px dashed #ccc";
+            });
+
+            dropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropArea.style.border = "2px dashed #ccc";
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            function handleFiles(file) {
+                // fire change event on the button file selector
+                fileSelector.files = file;
+                fileSelector.dispatchEvent(new Event("change"));
             }
         </script>
     </body>
