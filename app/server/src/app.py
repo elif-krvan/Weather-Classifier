@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import os
 import numpy as np
-import base64
 import tensorflow as tf
 import cv2
 from werkzeug.utils import secure_filename
@@ -107,4 +106,4 @@ def clear_img_data():
     session.clear()  
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
