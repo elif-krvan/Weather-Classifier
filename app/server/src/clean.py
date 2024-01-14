@@ -5,20 +5,20 @@ import os
 
 def delete_old_img(folder_path, hours_threshold=1):
     now = datetime.now()
+    try:
+        for filename in os.listdir(folder_path):
+            
+                file_path = os.path.join(folder_path, filename)
 
-    for filename in os.listdir(folder_path):
-        try:
-            file_path = os.path.join(folder_path, filename)
+                if os.path.isfile(file_path):
+                    creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
+                    time_difference = now - creation_time
 
-            if os.path.isfile(file_path):
-                creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
-                time_difference = now - creation_time
-
-                if time_difference.total_seconds() > hours_threshold * 3600:
-                    os.remove(file_path)
-        except Exception as e:
-            # Handle other exceptions
-            print(f"An unexpected error occurred: {e}")
+                    if time_difference.total_seconds() > hours_threshold * 3600:
+                        os.remove(file_path)
+    except Exception as e:
+        # Handle other exceptions
+        print(f"An unexpected error occurred: {e}")
 
 def job():
     print("Running scheduled task at ", datetime.now())
@@ -28,7 +28,12 @@ def job():
 # schedule for every 4 hours
 schedule.every(4).hours.do(job)
 
-print(os.listdir("."))
+files = os.listdir(".")
+print("current dir:", files)
+for filename in files:
+    if os.path.isdir(filename):
+        print("current dir: ", filename, " content: ", os.listdir(filename))
+        
 # run the task initially
 job()
 
