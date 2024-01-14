@@ -25,6 +25,10 @@ app.config["MODEL"] = load_model(os.path.join("model", "weatherclass.h5"))
 app.config["UPLOAD_FOLDER"] = "user_uploads"
 app.config["ALLOWED_EXT"] = {"png", "jpg", "jpeg", "gif", "bmp"}
 
+# create upload dir if it does not exist
+if not os.path.exists(app.config["UPLOAD_FOLDER"]):
+    os.makedirs(app.config["UPLOAD_FOLDER"])
+
 @app.route('/')
 def home(message = "", img=None):
     session_remove_img = session.get("remove_img", True)

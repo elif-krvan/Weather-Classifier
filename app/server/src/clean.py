@@ -18,10 +18,10 @@ def delete_old_img(folder_path, hours_threshold=1):
                         os.remove(file_path)
     except Exception as e:
         # Handle other exceptions
-        print(f"An unexpected error occurred: {e}")
+        print(f"An unexpected error occurred: {e}", flush=True)
 
 def job():
-    print("Running scheduled task at ", datetime.now())
+    print("Running scheduled task at ", datetime.now(), flush=True)
     folder_path = "user_uploads"
     delete_old_img(folder_path)
 
@@ -29,10 +29,10 @@ def job():
 schedule.every(4).hours.do(job)
 
 files = os.listdir(".")
-print("current dir:", files)
+print("current dir:", files, flush=True)
 for filename in files:
     if os.path.isdir(filename):
-        print("current dir: ", filename, " content: ", os.listdir(filename))
+        print("current dir: ", filename, " content: ", os.listdir(filename), flush=True)
         
 # run the task initially
 job()
