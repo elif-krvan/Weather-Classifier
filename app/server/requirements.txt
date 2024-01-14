@@ -3,4 +3,5 @@ numpy
 tensorflow==2.10.0
 opencv-python
 Werkzeug
+schedule
 gunicorn

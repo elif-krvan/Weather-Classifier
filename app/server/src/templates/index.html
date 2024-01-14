@@ -9,7 +9,7 @@
             href="{{ url_for('static',filename='styles/style.css') }}"
         />
         <link rel="stylesheet" href="static/styles/style.css" />
-
+        <link rel="icon" href="static/img/logo.png" type="image/x-icon" />
         <title>Weather Classifier</title>
     </head>
     <body>
@@ -29,7 +29,7 @@
                         type="file"
                         id="file-selector"
                         name="file"
-                        accept=".jpg, .jpeg, .png, .gif, .bmp"
+                        accept=".jpg, .jpeg, .png, .bmp"
                         onchange="previewImage()"
                         hidden="true"
                     />
@@ -54,7 +54,7 @@
                             type="file"
                             id="file-selector-dd"
                             name="file"
-                            accept=".jpg, .jpeg, .png, .gif, .bmp"
+                            accept=".jpg, .jpeg, .png, .bmp"
                             onchange="previewImage('file-selector-dd')"
                             hidden="true"
                         />
