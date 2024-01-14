@@ -1,5 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import os
+
+# Check if the code is running on Render
+on_render = os.environ.get('RENDER', False)
+
+# If running on Render, use CPU only
+if on_render:
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+else:
+    # If running locally, use GPU
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
 import numpy as np
 import tensorflow as tf
 import cv2
