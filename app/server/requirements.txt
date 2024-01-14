@@ -1,6 +1,7 @@
 Flask==3.0.0
 numpy
 tensorflow==2.10.0
+libgl1-mesa-glx
 opencv-python
 Werkzeug
 gunicorn
