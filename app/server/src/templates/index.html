@@ -75,67 +75,6 @@
             that the image features
             <b> {{ pred_result }} </b> weather {% endif %}
         </p>
-
-        <script>
-            const predictBtn = document.getElementById("predict");
-            const chosenFile = document.getElementById("chosen-file");
-            const resultMsg = document.getElementById("result");
-
-            predictBtn.style.display = "none";
-
-            function previewImage(inputId = "file-selector") {
-                console.log(inputId);
-                predictBtn.style.display = "inline-block";
-                const fileInput = document.getElementById(inputId);
-                const imagePreview = document.getElementById("image-preview");
-
-                let uploadFile = fileInput.files;
-
-                // clear previous view
-                imagePreview.innerHTML = "";
-                resultMsg.innerHTML = "";
-
-                // Check if a file is selected
-                if (uploadFile && uploadFile[0]) {
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        // create img element
-                        const img = document.createElement("img");
-                        img.src = e.target.result;
-                        imagePreview.appendChild(img);
-                    };
-
-                    // read selected file
-                    reader.readAsDataURL(uploadFile[0]);
-                    chosenFile.innerHTML = uploadFile[0].name;
-                }
-            }
-
-            const dropArea = document.getElementById("image-preview");
-            const fileSelector = document.getElementById("file-selector");
-
-            dropArea.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                dropArea.style.border = "2px dashed #333";
-            });
-
-            dropArea.addEventListener("dragleave", () => {
-                dropArea.style.border = "2px dashed #ccc";
-            });
-
-            dropArea.addEventListener("drop", (e) => {
-                e.preventDefault();
-                dropArea.style.border = "2px dashed #ccc";
-                const files = e.dataTransfer.files;
-                handleFiles(files);
-            });
-
-            function handleFiles(file) {
-                // fire change event on the button file selector
-                fileSelector.files = file;
-                fileSelector.dispatchEvent(new Event("change"));
-            }
-        </script>
+        <script src="/static/script/preview.js"></script>
     </body>
 </html>
