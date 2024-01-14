@@ -1,8 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&display=swap");
 body {
-    background-color: red;
+    background-color: rgb(136, 182, 255);
+    font-family: "Rubik", sans-serif;
+    font-size: 24px;
+    text-align: center;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 42px;
+}
+
+#prompt {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.select-img {
+    margin-top: 30px;
+    display: inline-block;
 }
 
 #image-preview > img {
-    width: 450px;
+    margin-top: 0px;
+    width: 480px;
     height: auto;
+}
+
+#predict {
+    display: none;
+    text-align: center;
+}
+
+#result {
+    font-size: 20px;
+}
+
+label,
+input[type="submit"] {
+    display: inline-block;
+    background-color: rgb(28, 79, 160);
+    color: rgb(233, 233, 233);
+    padding: 8px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+    border: 1px solid rgb(28, 79, 160);
+}
+
+#chosen-file {
+    display: inline-block;
+    font-size: 18px;
+    margin-left: 15px;
+}
+
+.file-select-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: -10px;
 }

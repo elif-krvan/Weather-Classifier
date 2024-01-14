@@ -15,44 +15,68 @@
     <body>
         <h1>Weather Classifier</h1>
 
-        {% if message %}
-        <p>{{ message }}</p>
-        {% endif %}
+        <div class="select-img">
+            <form
+                action="{{ url_for('upload') }}"
+                method="post"
+                enctype="multipart/form-data"
+            >
+                <p id="prompt">Choose an image of a weather condition!</p>
+                <div class="file-select-btn">
+                    <label for="file-selector">Select Image</label><br />
+                    <input
+                        type="file"
+                        id="file-selector"
+                        name="file"
+                        accept=".jpg, .jpeg, .png, .gif, .bmp"
+                        required
+                        onchange="previewImage()"
+                        hidden="true"
+                    />
+                    <span id="chosen-file"
+                        >{% if img != None %} {{img}} {% endif %}</span
+                    >
+                </div>
 
-        <form
-            action="{{ url_for('upload') }}"
-            method="post"
-            enctype="multipart/form-data"
-        >
-            <label for="file">Choose an image:</label>
-            <input
-                type="file"
-                id="file"
-                name="file"
-                accept=".jpg, .jpeg, .png"
-                required
-                onchange="previewImage()"
-            />
-            <br />
-            <input type="submit" name="action" value="Predict" />
-        </form>
-
-        <div id="image-preview">
-            {% if img != None %}
-            <img
-                src="{{ url_for('uploaded_file', filename=img) }}"
-                alt="Example Image"
-            />
-            <p>{{ img }}</p>
-            {% endif %}
+                <br />
+                <div id="image-preview">
+                    {% if img != None %}
+                    <img
+                        src="{{ url_for('uploaded_file', filename=img) }}"
+                        alt="Uploaded Image"
+                    />
+                    {% endif %}
+                </div>
+                <input
+                    id="predict"
+                    type="submit"
+                    name="action"
+                    value="Predict"
+                />
+            </form>
         </div>
+
+        <p id="result">
+            {% if pred_result and pred_conf != "" %} There is a {{ pred_conf }}%
+            that the image features
+            <b> {{ pred_result }} </b> weather {% endif %}
+        </p>
+
         <script>
+            const predictBtn = document.getElementById("predict");
+            const chosenFile = document.getElementById("chosen-file");
+            const resultMsg = document.getElementById("result");
+
+            predictBtn.style.display = "none";
+
             function previewImage() {
-                const fileInput = document.getElementById("file");
+                predictBtn.style.display = "inline-block";
+                const fileInput = document.getElementById("file-selector");
                 const imagePreview = document.getElementById("image-preview");
 
-                // Clear previous preview
+                // clear previous view
                 imagePreview.innerHTML = "";
+                resultMsg.innerHTML = "";
 
                 // Check if a file is selected
                 if (fileInput.files && fileInput.files[0]) {
@@ -69,6 +93,8 @@
 
                     // Read the selected file as a data URL
                     reader.readAsDataURL(fileInput.files[0]);
+                    console.log(fileInput.files[0]);
+                    chosenFile.innerHTML = fileInput.files[0].name;
                 }
             }
         </script>

@@ -17,27 +17,37 @@ app.config["ALLOWED_EXT"] = {"png", "jpg", "jpeg", "gif", "bmp"}
 
 @app.route('/')
 def home(message = "", img=None):
-    session_msg = session.get("msg", message)    
-    session_img = session.get("img_info", img)
+    session_remove_img = session.get("remove_img", True)
     
+    if session_remove_img:
+        clear_img_data()
+        return render_template('index.html', img=None)
+    
+    session_msg = session.get("msg", message)    
+    session_pred_res = session.get("pred_result", "")    
+    session_pred_conf = session.get("pred_confidence", "")    
+    session_img = session.get("img_info", img)
+        
     if session_img:
         session_img = session_img["filename"] 
-     
-    session.clear()     
         
-    print("ses image: ",session_img)
-    return render_template('index.html', message=session_msg, img=session_img)
+    session["remove_img"] = True
+    
+    print("results: ", session_pred_res, " conf: ", session_pred_conf)
+    return render_template('index.html', message=session_msg, img=session_img, pred_result=session_pred_res, pred_conf=session_pred_conf)
         
 @app.route('/upload', methods=['POST'])
 def upload():
-    img_info = session.pop('img_info', None)
+    # img_info = session.pop('img_info', None)
 
     # Delete the previously uploaded image from the server
-    try:
-        if img_info:
-            os.remove(img_info['file_path'])
-    except Exception as e:
-        print("file not found")
+    # try:
+    #     if img_info:
+    #         print()
+    #         os.remove(img_info['file_path'])
+    # except Exception as e:
+    #     print("file not found")
+    clear_img_data()
         
     uploaded_file = request.files['file']
     
@@ -69,23 +79,13 @@ def upload():
     yhat = app.config["MODEL"].predict(np.expand_dims(resized/255, 0))
     
     if yhat < 0.5:
-        msg = "Image is rain"
+        result = "rainy"
     else:
-        msg = "Image is snow"
+        result = "snowy"
     
-    session['msg'] = msg
-    
-    # # temporarily save the file to the system
-    # uploaded_file = request.files['file']
-    # print("before save")
-    # print(uploaded_file)
-    # print(uploaded_file.filename)
-    # filename = secure_filename(uploaded_file.filename)
-    # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    # uploaded_file.save(file_path)
-    
-    # # store img info in session variable
-    # session["img_info"] = {"file_path": file_path, "filename": filename}
+    session["pred_confidence"] = int((abs(yhat - 0.5) + 0.5) * 100)
+    session["pred_result"] = result    
+    session["remove_img"] = False    
     
     return redirect(url_for('home'))
 
@@ -93,11 +93,18 @@ def upload():
 def uploaded_file(filename):
     return send_from_directory('user_uploads', filename)
 
-# @app.route('/clear', methods=['POST'])
-# def clear():
-#     print("clear eyle")
-#     session.clear
-#     return a
+def clear_img_data():
+    img_info = session.pop('img_info', None)
+
+    # Delete the previously uploaded image from the server
+    try:
+        if img_info:
+            print()
+            os.remove(img_info['file_path'])
+    except Exception as e:
+        print("file not found")
+        
+    session.clear()  
 
 if __name__ == '__main__':
     app.run(debug=True)
