@@ -18,12 +18,13 @@ def delete_old_img(folder_path, hours_threshold=1):
 
 def job():
     print("Running scheduled task at ", datetime.now())
-    folder_path = "./user_uploads"
+    folder_path = "user_uploads"
     delete_old_img(folder_path)
 
 # schedule for every 4 hours
 schedule.every(4).hours.do(job)
 
+print(os.listdir("."))
 # run the task initially
 job()
 
