@@ -7,14 +7,18 @@ def delete_old_img(folder_path, hours_threshold=1):
     now = datetime.now()
 
     for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
+        try:
+            file_path = os.path.join(folder_path, filename)
 
-        if os.path.isfile(file_path):
-            creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
-            time_difference = now - creation_time
+            if os.path.isfile(file_path):
+                creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
+                time_difference = now - creation_time
 
-            if time_difference.total_seconds() > hours_threshold * 3600:
-                os.remove(file_path)
+                if time_difference.total_seconds() > hours_threshold * 3600:
+                    os.remove(file_path)
+        except Exception as e:
+            # Handle other exceptions
+            print(f"An unexpected error occurred: {e}")
 
 def job():
     print("Running scheduled task at ", datetime.now())
