@@ -13,8 +13,13 @@
         <title>Weather Classifier</title>
     </head>
     <body>
-        <h1>Weather Classifier</h1>
-
+        <div class="header">
+            <img src="{{ url_for('static', filename="img/snow.png") }}"
+            alt="Rain" />
+            <h1>Snow or Rain?</h1>
+            <img src="{{ url_for('static', filename="img/rain.png") }}"
+            alt="Snow" />
+        </div>
         <div class="select-img">
             <p id="prompt">Choose an image of a weather condition!</p>
             <form
